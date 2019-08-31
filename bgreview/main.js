@@ -2,6 +2,8 @@
 const express = require('express');
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
+const multer = require('multer');
+const upload = multer();
 
 // Configure PORT
 const PORT = parseInt(process.argv[2]) || parseInt(process.env.APP_PORT) || 3000;
@@ -110,45 +112,16 @@ app.get('/api/boardgames/:category',
 // returns a sepcific boardgame (includes all info in boardgames and gameinfo)
 app.get('/api/boardgame/:gameId',
     (req, resp) => {
-        console.log('gameId: ', req.params.gameId)
-
-        const gameId = req.params.gameId;
+        const gameId = parseInt(req.params.gameId);
 
         client.db('bgreview')
             .collection('boardgames')
             .aggregate([
-                { $match: { _id: ObjectId("5d694e2c67c7f6c30e7b050f") } },
+                { $match: { ID: gameId } },
                 { $lookup: { from: "gameinfo", localField: "ID", foreignField: "id", as: "game" } },
                 { $replaceRoot: { newRoot: { $mergeObjects: [{ $arrayElemAt: ["$game", 0] }, "$$ROOT"] } } },
                 { $project: { game: 0 } },
             ])
-            .then(result => {
-                console.info('>>> result: ', result);
-                resp.status(200);
-                resp.type('application/json');
-                resp.json(result);
-            })
-            .catch(error => {
-                resp.status(400);
-                resp.end(error);
-            })
-    }
-)
-
-// ** not tested yet!
-// GET /api/comments/:gameId
-// get comments by gameId
-// returns comment and name if not null
-app.get('/api/comments/:gameId',
-    (req, resp) => {
-        const gameId = parseInt(req.params.gameId);
-
-        client.db('bgreview')
-            .collection('comments')
-            .find(
-                { ID: gameId }
-            )
-            .project({ comment: 1, name: 1 })
             .toArray()
             .then(result => {
                 console.info('>>> result: ', result);
@@ -163,11 +136,43 @@ app.get('/api/comments/:gameId',
     }
 )
 
-app.use(express.json());       // to support JSON-encoded bodies
-app.use(express.urlencoded()); // to support URL-encoded bodies
+// GET /api/comments/gameId&offset=xxx&limit=xxx
+// get comments by gameId
+// returns name, user and comment
+app.get('/api/boardgame/:gameId/comments',
+    (req, resp) => {
+        const gameId = parseInt(req.params.gameId);
+        const offset = parseInt(req.query.offset) || 0;
+        const limit = parseInt(req.query.limit) || 20;
+
+        client.db('bgreview')
+            .collection('comments')
+            .find(
+                { ID: gameId }
+            )
+            .project({ comment: 1, name: 1, user: 1 })
+            .skip(offset)
+            .limit(limit)
+            .toArray()
+            .then(result => {
+                console.info('>>> result: ', result);
+                resp.status(200);
+                resp.type('application/json');
+                resp.json(result);
+            })
+            .catch(error => {
+                resp.status(400);
+                resp.end(error);
+            })
+    }
+)
+
+// for parsing multipart/form-data
+app.use(upload.array());
+app.use(express.static('public'));
 // POST /api/comments/:gameId
 // ** in the form, remember to submit the game name 
-app.post('/api/comments/:gameId',
+app.post('/api/boardgame/:gameId/comments',
     (req, resp) => {
         const cID = parseInt(req.params.gameId);
         const cComment = req.body.comment;
@@ -175,16 +180,25 @@ app.post('/api/comments/:gameId',
         const cRating = parseInt(req.body.rating);
         const cName = req.body.name;
 
+        console.info(">>> ID: ", cID);
+        console.info(">>> comment: ", cComment);
+        console.info(">>> user: ", cUser);
+        console.info(">>> rating: ", cRating);
+        console.info(">>> name: ", cName);
+
+        const review = {
+            ID: cID,
+            comment: cComment,
+            user: cUser,
+            rating: cRating,
+            name: cName,
+        };
+
         client.db('bgreview')
             .collection('comments')
-            .insertOne({
-                ID: cID,
-                comment: cComment,
-                user: cUser,
-                rating: cRating,
-                name: cName,
-            })
+            .insertOne(review)
             .then(result => {
+                console.info('>>> inserted: ', review);
                 console.info('>>> result: ', result);
                 resp.status(200);
                 resp.send(result);

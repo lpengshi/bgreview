@@ -17,74 +17,52 @@ const client = new MongoClient(URL, { useNewUrlParser: true, useUnifiedTopology:
 // Create an instance of the application
 const app = express();
 
-// GET /api/cuisine
-// db.getCollection('restaurant').distinct('type_of_food')
-app.get('/api/cuisine',
+// GET /api/boardgames/name?offset=?&limit=? 
+// shows list of boardgames' name by alphabetical order
+// returns name and id only
+app.get('/api/boardgames',
     (req, resp) => {
-        client.db('food')
-            .collection('restaurant')
-            .distinct('type_of_food')
+        const offset = parseInt(req.query.offset) || 0;
+        const limit = parseInt(req.query.limit) || 10;
+
+        client.db('bgreview')
+            .collection('boardgames')
+            .find({})
+            .project({ Name: 1 })
+            .sort({ Name: 1 })
+            .skip(offset)
+            .limit(limit)
+            .toArray()
+            //.sort((a, b) => a.Name.localeCompare(b.Name))
             .then(result => {
-                resp.status(200)
-                resp.type('application/json')
+                console.info('>>> result: ', result);
+                resp.status(200);
+                resp.type('application/json');
                 resp.json(result);
             })
             .catch(error => {
-                resp.status(400)
+                resp.status(400);
                 resp.end(error);
             })
     }
 )
 
-// GET /api/restaurant/:restId
-// GET /api/restaurant?restId=abc123
-app.get('/api/restaurant/:restId',
+// GET /api/boardgames/:name
+// gets a list of boardgames with name like...
+// returns name and id only
+app.get('/api/boardgames/:name',
     (req, resp) => {
-        console.log('restId: ', req.params.restId)
-
-        const restId = req.params.restId;
-
-        //let p = client.db('food')
-        client.db('food')
-            .collection('restaurant')
-            .findOne({ _id: ObjectId(restId)})
-            //.toArray() - findOne does not return a cursor, so does not have toArray()
-
-            .then(result => {
-                resp.type('application/json');
-                if (!result) {
-                    resp.status(404)
-                    resp.json({ message: `Not found: ${restId}`});
-                } else {
-                    resp.status(200)
-                    resp.json(result);
-                }
-            })
-            .catch(error => {
-                resp.status(404)
-                resp.json({ message: error });
-            })
-    }
-)
-
-// GET /api/restaurants/<cuisine>?offset=<number>,limit=<number>
-// default to offset=0, limit=10
-app.get('/api/restaurants/:cuisine',
-    (req, resp) => {
-        const offset = parseInt(req.query.offset) || 0;
-        const limit = parseInt(req.query.limit) || 10;
-        client.db('food')
-            .collection('restaurant')
-            .find({ 
-                type_of_food: {
-                    $regex: `^${req.params.cuisine}\$`, // RE
+        console.info('>>> name: ', req.params.name)
+        client.db('bgreview')
+            .collection('boardgames')
+            .find({
+                Name: {
+                    $regex: `.*${req.params.name}.*`, // RE
                     $options: 'i'  //ignore case
                 }
-            } 
-            ) // find returns a cursor
-            .project({ name: 1 })
-            .skip(offset)
-            .limit(limit)
+            }) // find returns a cursor
+            .project({ Name: 1 })
+            .sort({ Name: 1 })
             .toArray() //
             .then(result => {
                 resp.status(200)
@@ -97,6 +75,155 @@ app.get('/api/restaurants/:cuisine',
             })
     }
 )
+
+// GET /api/category
+// gets a list of categories 
+// returns category name only
+app.get('/api/category',
+    (req, resp) => {
+        client.db('bgreview')
+            .collection('gameinfo')
+            .aggregate([
+                { $project: { categories: { $trim: { input: "$boardgamecategory", chars: " []" } } } },
+                { $project: { category: { $split: ["$categories", ","] } } },
+                { $unwind: "$category" },
+                { $project: { category: { $trim: { input: "$category", chars: " \"'" } } } },
+                { $project: { category: { $split: ["$category", " / "] } } },
+                { $unwind: "$category" },
+                { $group: { _id: { "category": "$category" } } },
+                { $sort: { _id: 1 } }
+            ])
+            .toArray()
+            .then(result => {
+                resp.status(200)
+                resp.type('application/json')
+                resp.json(result);
+            })
+            .catch(error => {
+                resp.status(400)
+                resp.end(error);
+            })
+    }
+)
+
+// GET /api/boardgames/:category
+// gets a list of boardgames in a specific category
+// returns name and id
+app.get('/api/boardgames/:category',
+    (req, resp) => {
+        console.info('>>> category: ', req.params.category)
+        client.db('bgreview')
+            .collection('gameinfo')
+            .aggregate([
+                { $match: { boardgamecategory: { $regex: `.*${req.params.category}.*`, $options: 'i' } } },
+                { $lookup: { from: "boardgames", localField: "id", foreignField: "ID", as: "game" } },
+                { $replaceRoot: { newRoot: { $mergeObjects: [{ $arrayElemAt: ["$game", 0] }, "$$ROOT"] } } },
+                { $project: { game: 0 } },
+            ])
+            .project({ Name: 1 })
+            .toArray() //
+            .then(result => {
+                resp.status(200)
+                resp.type('application/json')
+                resp.json(result);
+            })
+            .catch(error => {
+                resp.status(400)
+                resp.end(error);
+            })
+    }
+)
+
+// GET /api/boardgame/:gameId
+// returns a sepcific boardgame (includes all info in boardgames and gameinfo)
+app.get('/api/boardgame/:gameId',
+    (req, resp) => {
+        console.log('gameId: ', req.params.gameId)
+
+        const gameId = req.params.gameId;
+
+        client.db('bgreview')
+            .collection('boardgames')
+            .aggregate([
+                { $match: { _id: ObjectId("5d694e2c67c7f6c30e7b050f") } },
+                { $lookup: { from: "gameinfo", localField: "ID", foreignField: "id", as: "game" } },
+                { $replaceRoot: { newRoot: { $mergeObjects: [{ $arrayElemAt: ["$game", 0] }, "$$ROOT"] } } },
+                { $project: { game: 0 } },
+            ])
+            .then(result => {
+                console.info('>>> result: ', result);
+                resp.status(200);
+                resp.type('application/json');
+                resp.json(result);
+            })
+            .catch(error => {
+                resp.status(400);
+                resp.end(error);
+            })
+    }
+)
+
+// ** not tested yet!
+// GET /api/comments/:gameId
+// get comments by gameId
+// returns comment and name if not null
+app.get('/api/comments/:gameId',
+    (req, resp) => {
+        const gameId = parseInt(req.params.gameId);
+
+        client.db('bgreview')
+            .collection('comments')
+            .find(
+                { ID: gameId }
+            )
+            .project({ comment: 1, name: 1 })
+            .toArray()
+            .then(result => {
+                console.info('>>> result: ', result);
+                resp.status(200);
+                resp.type('application/json');
+                resp.json(result);
+            })
+            .catch(error => {
+                resp.status(400);
+                resp.end(error);
+            })
+    }
+)
+
+app.use(express.json());       // to support JSON-encoded bodies
+app.use(express.urlencoded()); // to support URL-encoded bodies
+// POST /api/comments/:gameId
+// ** in the form, remember to submit the game name 
+app.post('/api/comments/:gameId',
+    (req, resp) => {
+        const cID = req.params.gameId;
+        const cComment = req.body.comment;
+        const cUser = req.body.user;
+        const cRating = parseInt(req.body.rating);
+        const cName = req.body.name;
+
+        client.db('bgreview')
+            .collection('comments')
+            .insertOne({
+                ID = cID,
+                comment = cComment,
+                user = cUser,
+                rating = cRating,
+                name = cName,
+            })
+            .then(result => {
+                console.info('>>> result: ', result);
+                resp.status(200);
+                resp.send(result);
+            })
+            .catch(error => {
+                resp.status(400);
+                resp.end(error);
+            })
+    }
+)
+
 
 app.use(express.static(__dirname + '/dist'));
 

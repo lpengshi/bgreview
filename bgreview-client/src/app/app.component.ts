@@ -12,6 +12,5 @@ export class AppComponent {
 
   home() {
     this.route.navigate([ '/' ])
-
   }
 }

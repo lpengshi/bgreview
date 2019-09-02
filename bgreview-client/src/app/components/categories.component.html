@@ -1,0 +1,22 @@
+<form fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="1vh">
+  
+    <mat-form-field appearance="outline">
+        <mat-label>Search Boardgame</mat-label>
+        <input matInput name="name" placeholder="Seach by Name">
+    </mat-form-field>
+        
+    <div fxLayout="row" fxLayoutAlign="space-around">
+        <a [routerLink]="back" mat-raised-button color="primary">
+            <mat-icon>search</mat-icon> Search
+        </a>
+    </div>    
+</form>
+      
+<mat-action-list>
+    <h1 mat-subheader>Boardgame Categories</h1>
+    <button mat-list-item *ngFor="let c of categories.categories"
+        (click)="selected(c._id.category)">
+        {{ c._id.category }}
+    </button>
+</mat-action-list>
+      

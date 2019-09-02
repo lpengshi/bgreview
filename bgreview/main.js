@@ -50,10 +50,10 @@ app.get('/api/boardgames',
     }
 )
 
-// GET /api/category
+// GET /api/categories
 // gets a list of categories 
 // returns category name only
-app.get('/api/category',
+app.get('/api/categories',
     (req, resp) => {
         client.db('bgreview')
             .collection('gameinfo')

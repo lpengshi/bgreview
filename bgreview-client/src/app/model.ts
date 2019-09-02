@@ -1,11 +1,13 @@
 export interface Boardgame {
-
-}
-
-export interface BoardgameName {
+  _id: string;
+  ID: string;
   Name: string;
 }
 
 export interface Boardgames {
-  boardgames: string[];
+  boardgames: Boardgame[];
+}
+
+export interface  Categories{
+  categories: string[];
 }

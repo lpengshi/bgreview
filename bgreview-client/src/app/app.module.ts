@@ -8,11 +8,12 @@ import { AppComponent } from './app.component';
 import { BoardgamesComponent } from './components/boardgames.component';
 import { ApprouteModule } from './approute.module';
 import { BoardgameService } from './boardgame.service';
+import { CategoriesComponent } from './components/categories.component';
 
 
 @NgModule({
   declarations: [
-    AppComponent, BoardgamesComponent
+    AppComponent, BoardgamesComponent, CategoriesComponent,
   ],
   imports: [
     BrowserModule,  BrowserAnimationsModule,

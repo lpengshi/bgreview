@@ -39,7 +39,11 @@ export class CommentsComponent implements OnInit {
     readonly activatedRoute: ActivatedRoute,
     readonly boardgameSvc: BoardgameService,
     readonly route: Router
-  ) {}
+  ) {
+    this.route.routeReuseStrategy.shouldReuseRoute = function() {
+      return false;
+    };
+  }
 
   ngOnInit() {
     this.gameId = this.activatedRoute.snapshot.params.gameId;

@@ -143,8 +143,8 @@ app.get('/api/boardgame/:gameId',
 app.get('/api/boardgame/:gameId/comments',
     (req, resp) => {
         const gameId = parseInt(req.params.gameId);
-        const offset = parseInt(req.query.offset) || 0;
-        const limit = parseInt(req.query.limit) || 20;
+        //const offset = parseInt(req.query.offset) || 0;
+        //const limit = parseInt(req.query.limit) || 20;
 
         client.db('bgreview')
             .collection('comments')
@@ -153,8 +153,8 @@ app.get('/api/boardgame/:gameId/comments',
             )
             .sort({ _id: -1 }) // sort by descending // newest comment first
             //.project({ comment: 1, name: 1, user: 1 })
-            .skip(offset)
-            .limit(limit)
+            //.skip(offset)
+            //.limit(limit)
             .toArray()
             .then(result => {
                 console.info('>>> result: ', result);

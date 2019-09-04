@@ -1,0 +1,57 @@
+<br />
+<div fxLayout="row" fxLayoutAlign="space-around">
+  <a [routerLink]="back" mat-raised-button color="accent">
+    <mat-icon>arrow_back</mat-icon> Back
+  </a>
+</div>
+<div class="example-container">
+  <form class="example-form" [formGroup]="commentForm" (ngSubmit)="onSubmit()">
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="name" formControlName="user" />
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="rating" formControlName="rating" />
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <textarea
+        matInput
+        placeholder="Enter comment..."
+        formControlName="comment"
+      ></textarea>
+    </mat-form-field>
+
+    <mat-form-field [hidden]="true">
+      <input matInput placeholder="game name" formControlName="name" />
+    </mat-form-field>
+
+    <button
+      type="submit"
+      mat-raised-button
+      color="primary"
+      [disabled]="!commentForm.valid"
+    >
+      Add
+    </button>
+  </form>
+</div>
+<div>
+  <mat-card *ngFor="let comment of activePageComments" class="myCard">
+    <mat-card-subtitle>
+      <b>{{ comment.user }}</b> {{ comment.rating }} / 10
+    </mat-card-subtitle>
+    <mat-card-content>
+      {{ comment.comment }}
+    </mat-card-content>
+  </mat-card>
+</div>
+<div>
+  <mat-paginator
+    [length]="commentList.comments.length"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions"
+    (page)="onPageChanged($event)"
+  >
+  </mat-paginator>
+</div>

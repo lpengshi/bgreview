@@ -1,0 +1,3 @@
+{
+  "mongo": "mongodb+srv://sa48team5:assignment@bgreview-mvnvo.gcp.mongodb.net/test?retryWrites=true&w=majority"
+}

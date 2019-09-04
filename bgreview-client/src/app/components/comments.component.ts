@@ -19,7 +19,7 @@ export class CommentsComponent implements OnInit {
   // MatPaginator Input
   length = this.commentList.comments.length;
   pageIndex: number = 0;
-  pageSize: number = 20;
+  pageSize: number = 10;
   pageSizeOptions: number[] = [5, 10, 20, 50];
 
   // MatPaginator Output
@@ -27,6 +27,7 @@ export class CommentsComponent implements OnInit {
   activePageComments = [];
 
   // form
+  ratings = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
   comment: PostComment;
   commentForm = new FormGroup({
     user: new FormControl(""),
@@ -81,7 +82,7 @@ export class CommentsComponent implements OnInit {
     const user = this.commentForm.value.user;
     const comment = this.commentForm.value.comment;
     const rating = parseInt(this.commentForm.value.rating);
-    const name = this.commentForm.value.name;
+    const name = this.commentList.comments[0].name;
     console.info(user + comment + rating + name);
 
     this.comment = new PostComment(user, comment, rating, name);

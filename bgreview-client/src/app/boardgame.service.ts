@@ -1,13 +1,16 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { map, flatMap, toArray } from 'rxjs/operators';
 
 import {
   Boardgames,
   Categories,
   Boardgame,
+  BoardgameDetail,
   CommentList,
   Comment,
-  PostComment
+  PostComment,
+  Snippet
 } from "./model";
 
 @Injectable()
@@ -64,5 +67,55 @@ export class BoardgameService {
       .then(result => {
         console.info(">>> result: ", result);
       });
+  }
+
+  boardgameDetail(gameId: string): Promise<BoardgameDetail>{
+    return (
+      this.http.get<BoardgameDetail>(`/api/boardgame/${gameId}`)
+      .toPromise()
+      .then(result =>{ 
+          const bg = <BoardgameDetail>{
+            id: result['_id'],
+            name: result['Name'],
+            thumbnail: result.thumbnail,
+            alternate: result.alternate,
+            artist: result['boardgameartist'],
+            category: result['category'],
+            designer: result['boardgamedesigner'],
+            family: result['boardgamefamily'],
+            mechanic: result['boardgamemechanic'],
+            publisher: result['boardgamepublisher'],
+            description: result.description,
+            image: result.image,
+            maxplayers: result.maxplayers,
+            playing_time: result['playingtime'],
+            year_published: result['yearpublished'],
+            rank: result['Rank'],
+            average: result['Average'],
+            bayes_average: result['Bayes average'],
+            users_rated: result['Users rated']
+          }
+          return bg;
+      })           
+  )
+  }
+
+  getSnippet(boardgameId: string): Promise<Snippet>{
+    return (
+      this.http.get<Snippet>(`/api/boardgame/${boardgameId}`)
+      .pipe(
+        map(v => v['data'][0]),
+        flatMap(v => v), 
+        map((v: any) => {
+          return(<Snippet>{
+            id: v['_id'],
+            name: v['Name'],
+            thumbnail: v.thumbnail,
+            alternate: v.alternate
+          })
+        })
+      )
+      .toPromise()                 
+  )
   }
 }

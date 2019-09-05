@@ -11,13 +11,15 @@ import { BoardgameService } from "./boardgame.service";
 import { CategoriesComponent } from "./components/categories.component";
 import { CommentsComponent } from "./components/comments.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { GameDetailComponent } from './components/game-detail.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     BoardgamesComponent,
     CategoriesComponent,
-    CommentsComponent
+    CommentsComponent,
+    GameDetailComponent
   ],
   imports: [
     BrowserModule,

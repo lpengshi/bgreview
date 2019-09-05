@@ -31,5 +31,34 @@ export class PostComment {
     public comment: string,
     public rating: number,
     public name: string
-  ) {}
+  ) { }
+}
+
+export interface BoardgameDetail {
+  id: string;
+  name: string;
+  thumbnail: string;
+  alternate: string[];
+  artist: string[];
+  category: string[];
+  designer: string[];
+  family: string[];
+  mechanic: string[];
+  publisher: string[];
+  description: string;
+  image: string;
+  maxplayers: string;
+  playing_time: number;
+  year_published: number;
+  rank: number;
+  average: number;
+  bayes_average: number;
+  users_rated: number;
+}
+
+export interface Snippet{
+  id: string;
+  name: string;
+  thumbnail: string;
+  alternate: string[];
 }

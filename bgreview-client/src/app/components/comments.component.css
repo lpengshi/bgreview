@@ -23,3 +23,29 @@
 .reviews {
   font-family: Helvetica;
 }
+
+.header {
+  position: fixed;
+  top: 9vh;
+  margin-right: 20px;
+  font-size: 2vh;
+}
+
+.middle {
+  position: fixed;
+  top: 35vh;
+  bottom: 8vh;
+  overflow: scroll;
+  margin-right: 1vh;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  align-items: center;
+}
+
+.a {
+  right: 0;
+}

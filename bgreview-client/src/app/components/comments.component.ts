@@ -76,6 +76,8 @@ export class CommentsComponent implements OnInit {
       firstCut,
       secondCut
     );
+    window.scrollTo(0, 0);
+    document.getElementById("commentBox").scrollTop = 0;
   }
 
   onSubmit() {

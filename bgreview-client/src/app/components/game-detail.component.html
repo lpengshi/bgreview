@@ -1,2 +1,32 @@
-{{bgdetail.id}}
-{{bgdetail.alternate}}
+<mat-card>
+    <div *ngIf="bgdetail" class="container">
+        <div class="item1">
+            <div class="text-details">
+                <mat-card-title>{{bgdetail.name}}</mat-card-title>
+                <mat-divider [inset]='true'></mat-divider>
+                <br>
+                <mat-card-content class="content">
+                    <span>Alternate names:  {{altNames}}</span>
+                    <br>
+                    <span>Artist(s):  {{artists}}</span>
+                    <br>
+                    <span>Year published: {{bgdetail.year_published}}</span>
+                    <br>
+                    <span>Rank:  {{bgdetail.rank}}</span>
+                    <br>
+                    <span>Boardgame family:  {{families}}</span>
+                    <br>
+                    <span>Description: {{bgdetail.description}}</span>
+                </mat-card-content>
+            </div>
+        </div>
+        <div class="item2">
+            <div class="image-container">
+                <img class="displayImage" src="{{bgdetail.thumbnail}}">
+            </div>
+        </div>
+    </div>
+    <div *ngIf="!bgdetail">
+        <p>Sorry, something went wrong, or the title you were looking for couldn't be found.</p>
+    </div>
+</mat-card>

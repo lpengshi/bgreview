@@ -10,7 +10,6 @@ import {
   CommentList,
   Comment,
   PostComment,
-  Snippet
 } from "./model";
 
 @Injectable()
@@ -75,47 +74,28 @@ export class BoardgameService {
       .toPromise()
       .then(result =>{ 
           const bg = <BoardgameDetail>{
-            id: result['_id'],
-            name: result['Name'],
-            thumbnail: result.thumbnail,
-            alternate: result.alternate,
-            artist: result['boardgameartist'],
-            category: result['category'],
-            designer: result['boardgamedesigner'],
-            family: result['boardgamefamily'],
-            mechanic: result['boardgamemechanic'],
-            publisher: result['boardgamepublisher'],
-            description: result.description,
-            image: result.image,
-            maxplayers: result.maxplayers,
-            playing_time: result['playingtime'],
-            year_published: result['yearpublished'],
-            rank: result['Rank'],
-            average: result['Average'],
-            bayes_average: result['Bayes average'],
-            users_rated: result['Users rated']
+            id: result[0]['_id'],
+            name: result[0]['Name'],
+            thumbnail: result[0].thumbnail,
+            alternate: result[0].alternate,
+            artist: result[0]['boardgameartist'],
+            category: result[0]['category'],
+            designer: result[0]['boardgamedesigner'],
+            family: result[0]['boardgamefamily'],
+            mechanic: result[0]['boardgamemechanic'],
+            publisher: result[0]['boardgamepublisher'],
+            description: result[0].description,
+            image: result[0].image,
+            maxplayers: result[0].maxplayers,
+            playing_time: result[0]['playingtime'],
+            year_published: result[0]['yearpublished'],
+            rank: result[0]['Rank'],
+            average: result[0]['Average'],
+            bayes_average: result[0]['Bayes average'],
+            users_rated: result[0]['Users rated']
           }
           return bg;
       })           
-  )
-  }
-
-  getSnippet(boardgameId: string): Promise<Snippet>{
-    return (
-      this.http.get<Snippet>(`/api/boardgame/${boardgameId}`)
-      .pipe(
-        map(v => v['data'][0]),
-        flatMap(v => v), 
-        map((v: any) => {
-          return(<Snippet>{
-            id: v['_id'],
-            name: v['Name'],
-            thumbnail: v.thumbnail,
-            alternate: v.alternate
-          })
-        })
-      )
-      .toPromise()                 
   )
   }
 }

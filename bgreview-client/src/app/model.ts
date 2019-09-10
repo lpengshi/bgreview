@@ -55,10 +55,3 @@ export interface BoardgameDetail {
   bayes_average: number;
   users_rated: number;
 }
-
-export interface Snippet{
-  id: string;
-  name: string;
-  thumbnail: string;
-  alternate: string[];
-}

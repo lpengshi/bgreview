@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { BoardgameDetail, Boardgame, Snippet } from '../model';
+import { BoardgameDetail, Boardgame } from '../model';
 import { BoardgameService } from '../boardgame.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -14,8 +14,14 @@ export class GameDetailComponent implements OnInit {
 
   bgdetail: BoardgameDetail = { id: '', name: '', thumbnail: '', alternate: [], artist: [], category: [], designer: [], family: [], mechanic: [], publisher: [], description: '', image: '', maxplayers: '', playing_time: 0, year_published: 0, rank: 0, average: 0, bayes_average: 0, users_rated: 0 }
 
-  snippet: Snippet = { id: '', name: '', thumbnail: '', alternate: []}
-  
+  altNames = "";
+  artists = "";
+  categories = "";
+  designers = "";
+  families = "";
+  mechanics = "";
+  publishers = "";
+
   constructor(readonly activatedRoute: ActivatedRoute,
     readonly boardgameSvc: BoardgameService,
     readonly route: Router) { }
@@ -24,21 +30,38 @@ export class GameDetailComponent implements OnInit {
     this.gameId = this.activatedRoute.snapshot.params.gameId;
 
     this.boardgameSvc
-    .boardgameDetail(this.gameId)
-    .then(result => {
-      console.info(">>> result: ", result);
-      this.bgdetail = result;
-    }).catch(error => {
-      console.info(">>> error: ", error);
-    })
+      .boardgameDetail(this.gameId)
+      .then(result => {
+        console.info(">>> result: ", result);
+        this.bgdetail = result;
+        //this.filterArray();
+        this.setArray();
+      }).catch(error => {
+        console.info(">>> error: ", error);
+        this.bgdetail = null;
+      })
+  }
 
-    this.boardgameSvc
-    .getSnippet(this.gameId)
-    .then(result => {
-      console.info(">>> result: ", result);
-      this.snippet = result;
-    }).catch(error => {
-      console.info(">>> error: ", error);
-    })
+  setArray() {
+    this.altNames = this.arrayRegex(this.bgdetail.alternate)
+    this.artists = this.arrayRegex(this.bgdetail.artist)
+    this.categories = this.arrayRegex(this.bgdetail.category)
+    this.designers = this.arrayRegex(this.bgdetail.designer)
+    this.families = this.arrayRegex(this.bgdetail.family)
+    this.mechanics = this.arrayRegex(this.bgdetail.mechanic)
+    this.publishers = this.arrayRegex(this.bgdetail.publisher)
+  }
+
+  arrayRegex(input: string[]): string {
+    var res = '';
+    if(input != null){      
+      for (let i = 0; i < input.length; i++) {
+        const element = input[i];
+        res = res + element
+      }
+      res = res.replace(/[[]|'|]/g, "");
+    }
+    return res.trim();
   }
 }
+

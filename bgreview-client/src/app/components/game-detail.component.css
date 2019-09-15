@@ -1,0 +1,30 @@
+.container {
+    display: flex;
+    flex-flow: row wrap;
+}
+#container > div {
+    flex: 1 50%;
+    padding: 10px;
+}
+.item1 {
+    order: 1;
+    padding-bottom: 10px;
+}
+
+.item2 {   
+    order: 2;
+    height: auto;
+    width: auto;
+    max-width: 10vh;
+    max-height: 15vh;
+}
+
+.displayImage {
+    width: auto;
+    height: auto;
+}
+
+.image-container {
+    max-width: 10vh;
+    max-height: 10vh;
+}

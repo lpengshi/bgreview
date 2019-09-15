@@ -1,0 +1,63 @@
+<br />
+<div fxLayout="row" fxLayoutAlign="space-around"></div>
+<div class="header">
+  <form class="example-form" [formGroup]="commentForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <li class="mat-form-field--inline">
+        <mat-form-field>
+          <input matInput placeholder="Name" formControlName="user" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-select placeholder="Rating" formControlName="rating">
+            <mat-option *ngFor="let r of ratings" [value]="r">
+              {{ r }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </li>
+      <li class="mat-form-field--inline">
+        <mat-form-field>
+          <textarea
+            matInput
+            required
+            placeholder="Leave a comment"
+            formControlName="comment"
+          ></textarea>
+        </mat-form-field>
+        <button
+          type="submit"
+          mat-raised-button
+          color="primary"
+          [disabled]="!commentForm.valid"
+        >
+          Add
+        </button>
+      </li>
+    </div>
+  </form>
+  <h3 class="reviews">
+    <a [routerLink]="back" mat-mini-fab color="primary">
+      <mat-icon>arrow_back</mat-icon>
+    </a>
+    Game Reviews ({{ commentList.comments.length }})
+  </h3>
+</div>
+<div class="middle" id="commentBox">
+  <mat-card *ngFor="let comment of activePageComments" class="myCard">
+    <mat-card-subtitle>
+      <b>{{ comment.user }}</b> {{ comment.rating }} / 10
+    </mat-card-subtitle>
+    <mat-card-content>
+      {{ comment.comment }}
+    </mat-card-content>
+  </mat-card>
+</div>
+<div class="footer">
+  <mat-paginator
+    [length]="commentList.comments.length"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions"
+    (page)="onPageChanged($event)"
+  >
+  </mat-paginator>
+</div>

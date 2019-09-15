@@ -1,0 +1,51 @@
+.myCard {
+  margin-top: 1vh;
+  margin-bottom: 1vh;
+  background-color: lightgray;
+}
+
+.mat-form-field--inline {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.mat-form-field--inline .mat-form-field {
+  display: inline-block;
+  width: 100%;
+  vertical-align: middle;
+}
+
+.mat-form-field--inline .mat-form-field:nth-child(1) {
+  margin-right: 10px;
+}
+
+.reviews {
+  font-family: Helvetica;
+}
+
+.header {
+  position: fixed;
+  top: 9vh;
+  margin-right: 20px;
+  font-size: 2vh;
+}
+
+.middle {
+  position: fixed;
+  top: 35vh;
+  bottom: 8vh;
+  overflow: scroll;
+  margin-right: 1vh;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  align-items: center;
+}
+
+.a {
+  right: 0;
+}

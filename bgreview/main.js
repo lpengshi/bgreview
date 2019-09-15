@@ -4,6 +4,7 @@ const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
 const multer = require('multer');
 const upload = multer();
+const bodyParser = require('body-parser');
 
 // Configure PORT
 const PORT = parseInt(process.argv[2]) || parseInt(process.env.APP_PORT) || 3000;
@@ -32,7 +33,7 @@ app.get('/api/boardgames',
             .collection('boardgames')
             .aggregate([
                 { $match: { Name: { $regex: `.*${name}.*`, $options: 'i' } } },  //find games with matching name
-                { $project: { Name: { $trim: { input: "$Name", chars: "\"'" } } } }, //remove the quotations if any
+                { $project: { ID: 1, Name: { $trim: { input: "$Name", chars: "\"'" } } } }, //remove the quotations if any
             ])
             .sort({ Name: 1 })
             .skip(offset)
@@ -142,17 +143,18 @@ app.get('/api/boardgame/:gameId',
 app.get('/api/boardgame/:gameId/comments',
     (req, resp) => {
         const gameId = parseInt(req.params.gameId);
-        const offset = parseInt(req.query.offset) || 0;
-        const limit = parseInt(req.query.limit) || 20;
+        //const offset = parseInt(req.query.offset) || 0;
+        //const limit = parseInt(req.query.limit) || 20;
 
         client.db('bgreview')
             .collection('comments')
             .find(
                 { ID: gameId }
             )
-            .project({ comment: 1, name: 1, user: 1 })
-            .skip(offset)
-            .limit(limit)
+            .sort({ _id: -1 }) // sort by descending // newest comment first
+            //.project({ comment: 1, name: 1, user: 1 })
+            //.skip(offset)
+            //.limit(limit)
             .toArray()
             .then(result => {
                 console.info('>>> result: ', result);
@@ -167,6 +169,8 @@ app.get('/api/boardgame/:gameId/comments',
     }
 )
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 // for parsing multipart/form-data
 app.use(upload.array());
 app.use(express.static('public'));
@@ -209,7 +213,6 @@ app.post('/api/boardgame/:gameId/comments',
             })
     }
 )
-
 
 app.use(express.static(__dirname + '/dist'));
 

@@ -4,4 +4,9 @@
       {{ bg.Name }}
     </button>
 </mat-action-list>
-  
+
+<mat-paginator [length]="length"
+              [pageSize]="pageSize"
+              [pageSizeOptions]="pageSizeOptions"
+              (page)="pageEvent = $event">
+</mat-paginator>

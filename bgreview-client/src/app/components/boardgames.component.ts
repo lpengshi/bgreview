@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { BoardgameService } from '../boardgame.service';
 import { Boardgames } from '../model';
 import { Router } from '@angular/router';
+import {PageEvent} from '@angular/material/paginator';
 
 @Component({
   selector: 'app-boardgames',
@@ -10,7 +11,10 @@ import { Router } from '@angular/router';
 })
 export class BoardgamesComponent implements OnInit {
 
-  boardgames: Boardgames = { boardgames: [] }
+  boardgames: Boardgames = { boardgames: [] };
+  length: number;
+  pageSize: number;
+  pageSizeOptions: number[] = [10, 20, 40];
 
   constructor(readonly boardgameSvc: BoardgameService, readonly router: Router) { }
 
@@ -18,6 +22,8 @@ export class BoardgamesComponent implements OnInit {
     this.boardgameSvc.boardgames()
       .then(result => {
         this.boardgames = result;
+        this.length = this.boardgames.boardgames.length;
+        this.pageSize = this.length;
       })
       .catch(error => {
         console.error('>> error: ', error);
@@ -29,4 +35,9 @@ export class BoardgamesComponent implements OnInit {
     this.router.navigate([ '/boardgames', text ])
   }
 
+  pageEvent: PageEvent;
+
+  setPageSizeOptions(setPageSizeOptionsInput: string) {
+    this.pageSizeOptions = setPageSizeOptionsInput.split(',').map(str => +str);
+  }
 }

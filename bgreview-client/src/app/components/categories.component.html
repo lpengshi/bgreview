@@ -1,13 +1,13 @@
-<form fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="1vh">
+<form fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="1vh" (ngSubmit)="onSubmit()">
   <mat-form-field appearance="outline">
     <mat-label>Search Boardgame</mat-label>
-    <input matInput name="name" placeholder="Search by Name" />
+    <input matInput [(ngModel)]="searchInput" name="serchInput" placeholder="Search by Name" />
   </mat-form-field>
 
   <div fxLayout="row" fxLayoutAlign="space-around">
-    <a [routerLink]="back" mat-raised-button color="primary">
+    <button type="submit" mat-raised-button color="primary">
       <mat-icon>search</mat-icon> Search
-    </a>
+    </button>
   </div>
 </form>
 

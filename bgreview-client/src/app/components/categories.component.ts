@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 export class CategoriesComponent implements OnInit {
 
   categories: Categories = { categories: [] }
+  searchInput: string
 
   constructor(readonly boardgameSvc: BoardgameService, readonly router: Router) { }
 
@@ -26,7 +27,15 @@ export class CategoriesComponent implements OnInit {
 
   selected(text) {
     console.info('selected category: ', text);
-    this.router.navigate([ '/boardgames', text ])
+    this.router.navigate([ '/boardgames', text ]);
+  }
+
+  onSubmit() {
+    if (this.searchInput == undefined) {
+      this.searchInput = '';
+    }
+    console.info('Search Input: ', this.searchInput);
+    this.router.navigate([ '/boardgames', this.searchInput ]);
   }
 
 }

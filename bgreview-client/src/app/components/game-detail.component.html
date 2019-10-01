@@ -1,32 +1,82 @@
-<mat-card>
-    <div *ngIf="bgdetail" class="container">
-        <div class="item1">
-            <div class="text-details">
+<!-- <div *ngIf="bgdetail" class="container">
+    <div class="item1">
+        <div class="text-details">
+            <mat-card-title>{{bgdetail.name}}</mat-card-title>
+            <mat-divider [inset]='true'></mat-divider>
+            <br>
+            <span><strong>Alternate names:</strong> {{altNames || "-nil-"}}</span>
+            <br>
+            <span><strong>Artists:</strong> {{artists}}</span>
+            <br>
+            <span><strong>Year published:</strong> {{bgdetail.year_published}}</span>
+            <br>
+            <span><strong>Rank:</strong> {{bgdetail.rank}}</span>
+            <br>
+            <span><strong>Boardgame family:</strong> {{families}}</span>
+            <br>
+            <br>
+
+            <div class="description-box">
+                <span><strong>Description:</strong></span>
+                <p [innerHtml]="bgdetail.description"></p>
+            </div>
+        </div>
+    </div>
+    <div class="item2">
+        <div class="image-container">
+            <img class="displayImage" src="{{bgdetail.thumbnail}}">
+        </div>
+    </div>
+</div> -->
+
+<div *ngIf="!bgdetail">
+    <p>Sorry, something went wrong, or the title you were looking for couldn't be found.</p>
+</div>
+<div *ngIf="bgdetail">
+    <div class="row">
+        <div>
+            <mat-card class="card-main">
                 <mat-card-title>{{bgdetail.name}}</mat-card-title>
                 <mat-divider [inset]='true'></mat-divider>
                 <br>
-                <mat-card-content class="content">
-                    <span>Alternate names:  {{altNames}}</span>
-                    <br>
-                    <span>Artist(s):  {{artists}}</span>
-                    <br>
-                    <span>Year published: {{bgdetail.year_published}}</span>
-                    <br>
-                    <span>Rank:  {{bgdetail.rank}}</span>
-                    <br>
-                    <span>Boardgame family:  {{families}}</span>
-                    <br>
-                    <span>Description: {{bgdetail.description}}</span>
-                </mat-card-content>
-            </div>
+                <span><strong>Alternate names:</strong> {{altNames || "N.A"}}</span>
+                <br>
+                <span><strong>Artists:</strong> {{artists}}</span>
+                <br>
+                <span><strong>Year published:</strong> {{bgdetail.year_published}}</span>
+                <br>
+                <span><strong>Publishers:</strong> {{publishers}}</span>
+                <br>
+                <span><strong>Boardgame family:</strong> {{families}}</span>
+                <br>
+                <br>
+                <span><strong>Description:</strong></span>
+                <p [innerHtml]="bgdetail.description"></p>
+            </mat-card>
+            <mat-card class="card-right">
+                <mat-card-actions>
+                    <mat-chip-list>
+                        <mat-chip color="accent" selected>Rank:  <strong>{{bgdetail.rank}}</strong></mat-chip>
+                        <mat-chip>Max-players: {{bgdetail.maxplayers}}</mat-chip>
+                        <mat-chip>Playing time: {{bgdetail.playing_time}} minutes</mat-chip>
+                    </mat-chip-list>
+                </mat-card-actions>
+                <img mat-card-image src="{{bgdetail.image}}" alt="boardgame image" />
+            </mat-card>
         </div>
-        <div class="item2">
-            <div class="image-container">
-                <img class="displayImage" src="{{bgdetail.thumbnail}}">
-            </div>
+        <div>
+
         </div>
     </div>
-    <div *ngIf="!bgdetail">
-        <p>Sorry, something went wrong, or the title you were looking for couldn't be found.</p>
+</div>
+<!-- 
+<div class="row">
+    <div class="main">
+        <mat-card class="card-main">
+            <p>Test</p>
+        </mat-card>
     </div>
-</mat-card>
+    <div class="card-right">
+        <img mat-card-image src="{{bgdetail.image}}">
+    </div>
+</div> -->

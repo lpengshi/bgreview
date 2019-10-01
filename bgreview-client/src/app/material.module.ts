@@ -11,6 +11,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatCardModule } from "@angular/material/card";
 import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatSelectModule } from "@angular/material/select";
+import {MatChipsModule} from '@angular/material/chips'; 
 
 const MODULES = [
   FlexLayoutModule,
@@ -22,7 +23,8 @@ const MODULES = [
   MatIconModule,
   MatCardModule,
   MatPaginatorModule,
-  MatSelectModule
+  MatSelectModule,
+  MatChipsModule
 ];
 
 @NgModule({

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output } from '@angular/core';
 import { BoardgameDetail, Boardgame } from '../model';
 import { BoardgameService } from '../boardgame.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-game-detail',
   templateUrl: './game-detail.component.html',
-  styles: []
+  styleUrls: ['./game-detail.component.css']
 })
 export class GameDetailComponent implements OnInit {
 
@@ -36,6 +36,7 @@ export class GameDetailComponent implements OnInit {
         this.bgdetail = result;
         //this.filterArray();
         this.setArray();
+
       }).catch(error => {
         console.info(">>> error: ", error);
         this.bgdetail = null;
@@ -60,6 +61,7 @@ export class GameDetailComponent implements OnInit {
         res = res + element
       }
       res = res.replace(/[[]|'|]/g, "");
+      res = res.replace(/(Admin: Better Description Needed!)/g, "N.A")
     }
     return res.trim();
   }

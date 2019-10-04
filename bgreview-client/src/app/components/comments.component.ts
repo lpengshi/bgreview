@@ -58,7 +58,7 @@ export class CommentsComponent implements OnInit {
           0,
           this.pageSize
         );
-        this.back = `/boardgames?gameId=${this.gameId}`;
+        this.back = `/boardgame/${this.gameId}`;
       })
       .catch(error => {
         console.info(">>> error: ", error);

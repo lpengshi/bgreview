@@ -1,40 +1,42 @@
 #header {
-    grid-area:header;
-    text-align: center;
-    font-family: Roboto,"Helvetica Neue",sans-serif;
-    font-size: 1rem;
-    padding: 5px;
+  grid-area: header;
+  text-align: center;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 1rem;
+  padding: 5px;
 }
 
 #main {
-    grid-area: main;
+  grid-area: main;
 }
 
 #info {
-    grid-area: info;
+  grid-area: info;
 }
 
-@media (min-width: 700px){
-    .container {
-        display: grid;
-        grid-gap: 15px;
-        padding: 10px;
-        grid-template-areas:
-        'header header'
-        'main info';
-    }
+@media (min-width: 700px) {
+  .container {
+    display: grid;
+    grid-gap: 15px;
+    padding: 10px;
+    grid-template-areas:
+      "header header"
+      "main info";
+  }
 }
 
-@media (max-width: 700px){
-    .container {
-        display: grid;
-        grid-gap: 15px;
-        padding: 10px;
-        grid-template-areas:
-        'header'
-        'info'
-        'main';
-    }
+@media (max-width: 700px) {
+  .container {
+    display: grid;
+    grid-gap: 15px;
+    padding: 10px;
+    grid-template-areas:
+      "header"
+      "info"
+      "main";
+  }
 }
 
-
+#commentsBtn {
+  text-align: center;
+}

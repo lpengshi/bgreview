@@ -1,40 +1,53 @@
 <div *ngIf="!bgdetail">
-    <p>Sorry, something went wrong, or the title you were looking for couldn't be found.</p>
+  <p>
+    Sorry, something went wrong, or the title you were looking for couldn't be
+    found.
+  </p>
 </div>
 <div *ngIf="bgdetail">
-    <div class="container">
-        <div class='mat-elevation-z1' id="header">
-                <h2>{{bgdetail.name}}</h2>
-        </div>
-        <div id="main">
-            <mat-card class="card-main">
-                <br>
-                <span><strong>Alternate names:</strong> {{altNames || "N.A"}}</span>
-                <br>
-                <span><strong>Artists:</strong> {{artists}}</span>
-                <br>
-                <span><strong>Year published:</strong> {{bgdetail.year_published}}</span>
-                <br>
-                <span><strong>Publishers:</strong> {{publishers}}</span>
-                <br>
-                <span><strong>Boardgame family:</strong> {{families}}</span>
-                <br>
-                <br>
-                <span><strong>Description:</strong></span>
-                <p [innerHtml]="bgdetail.description"></p>
-            </mat-card>
-        </div>
-        <div id='info'>
-            <mat-card class="card-right">
-                <mat-card-actions>
-                    <mat-chip-list>
-                        <mat-chip color="accent" selected>Rank: <strong>{{bgdetail.rank}}</strong></mat-chip>
-                        <mat-chip>Max-players: {{bgdetail.maxplayers}}</mat-chip>
-                        <mat-chip>Playing time: {{bgdetail.playing_time}} minutes</mat-chip>
-                    </mat-chip-list>
-                </mat-card-actions>
-                <img mat-card-image src="{{bgdetail.image}}" alt="boardgame image" />
-            </mat-card>
-        </div>
+  <div class="container">
+    <div class="mat-elevation-z1" id="header">
+      <h2>{{ bgdetail.name }}</h2>
     </div>
+    <div id="main">
+      <mat-card class="card-main">
+        <br />
+        <span><strong>Alternate names:</strong> {{ altNames || "N.A" }}</span>
+        <br />
+        <span><strong>Artists:</strong> {{ artists }}</span>
+        <br />
+        <span
+          ><strong>Year published:</strong> {{ bgdetail.year_published }}</span
+        >
+        <br />
+        <span><strong>Publishers:</strong> {{ publishers }}</span>
+        <br />
+        <span><strong>Boardgame family:</strong> {{ families }}</span>
+        <br />
+        <br />
+        <span><strong>Description:</strong></span>
+        <p [innerHtml]="bgdetail.description"></p>
+      </mat-card>
+    </div>
+    <div id="info">
+      <mat-card class="card-right">
+        <mat-card-actions>
+          <mat-chip-list>
+            <mat-chip color="accent" selected
+              >Rank: <strong>{{ bgdetail.rank }}</strong></mat-chip
+            >
+            <mat-chip>Max-players: {{ bgdetail.maxplayers }}</mat-chip>
+            <mat-chip
+              >Playing time: {{ bgdetail.playing_time }} minutes</mat-chip
+            >
+            <mat-chip color="primary" selected [routerLink]="comments"
+              ><mat-icon>comment</mat-icon>Reviews</mat-chip
+            >
+          </mat-chip-list>
+        </mat-card-actions>
+        <img mat-card-image src="{{ bgdetail.image }}" alt="boardgame image" />
+      </mat-card>
+    </div>
+    <div id="commentsBtn"></div>
+  </div>
 </div>

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { map, flatMap, toArray } from 'rxjs/operators';
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
+import { map, flatMap, toArray } from "rxjs/operators";
 
 import {
   Boardgames,
@@ -9,16 +9,28 @@ import {
   BoardgameDetail,
   CommentList,
   Comment,
-  PostComment,
+  PostComment
 } from "./model";
 
 @Injectable()
 export class BoardgameService {
   constructor(readonly http: HttpClient) {}
 
-  boardgames(): Promise<Boardgames> {
+  boardgames(name: string): Promise<Boardgames> {
+    const params = new HttpParams().set("name", name);
     return this.http
-      .get<Boardgame[]>("/api/boardgames")
+      .get<Boardgame[]>("/api/boardgames", { params: params })
+      .toPromise()
+      .then(result => {
+        return <Boardgames>{
+          boardgames: result
+        };
+      });
+  }
+
+  category(category: string): Promise<Boardgames> {
+    return this.http
+      .get<Boardgame[]>(`/api/boardgames/${category}`)
       .toPromise()
       .then(result => {
         return <Boardgames>{
@@ -68,34 +80,33 @@ export class BoardgameService {
       });
   }
 
-  boardgameDetail(gameId: string): Promise<BoardgameDetail>{
-    return (
-      this.http.get<BoardgameDetail>(`/api/boardgame/${gameId}`)
+  boardgameDetail(gameId: string): Promise<BoardgameDetail> {
+    return this.http
+      .get<BoardgameDetail>(`/api/boardgame/${gameId}`)
       .toPromise()
-      .then(result =>{ 
-          const bg = <BoardgameDetail>{
-            id: result[0]['_id'],
-            name: result[0]['Name'],
-            thumbnail: result[0].thumbnail,
-            alternate: result[0].alternate,
-            artist: result[0]['boardgameartist'],
-            category: result[0]['category'],
-            designer: result[0]['boardgamedesigner'],
-            family: result[0]['boardgamefamily'],
-            mechanic: result[0]['boardgamemechanic'],
-            publisher: result[0]['boardgamepublisher'],
-            description: result[0].description,
-            image: result[0].image,
-            maxplayers: result[0].maxplayers,
-            playing_time: result[0]['playingtime'],
-            year_published: result[0]['yearpublished'],
-            rank: result[0]['Rank'],
-            average: result[0]['Average'],
-            bayes_average: result[0]['Bayes average'],
-            users_rated: result[0]['Users rated']
-          }
-          return bg;
-      })           
-  )
+      .then(result => {
+        const bg = <BoardgameDetail>{
+          id: result[0]["_id"],
+          name: result[0]["Name"],
+          thumbnail: result[0].thumbnail,
+          alternate: result[0].alternate,
+          artist: result[0]["boardgameartist"],
+          category: result[0]["category"],
+          designer: result[0]["boardgamedesigner"],
+          family: result[0]["boardgamefamily"],
+          mechanic: result[0]["boardgamemechanic"],
+          publisher: result[0]["boardgamepublisher"],
+          description: result[0].description,
+          image: result[0].image,
+          maxplayers: result[0].maxplayers,
+          playing_time: result[0]["playingtime"],
+          year_published: result[0]["yearpublished"],
+          rank: result[0]["Rank"],
+          average: result[0]["Average"],
+          bayes_average: result[0]["Bayes average"],
+          users_rated: result[0]["Users rated"]
+        };
+        return bg;
+      });
   }
 }

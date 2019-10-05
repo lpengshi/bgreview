@@ -1,12 +1,14 @@
 <mat-action-list>
-    <button mat-list-item *ngFor="let bg of boardgames.boardgames"
-        (click)="selected(bg)">
-      {{ bg.Name }}
-    </button>
+  <button mat-list-item *ngFor="let bg of activeBoardgamePage"
+    (click)="selected(bg._id)">
+    {{ bg.Name }}
+  </button>
 </mat-action-list>
 
-<mat-paginator [length]="length"
-              [pageSize]="pageSize"
-              [pageSizeOptions]="pageSizeOptions"
-              (page)="pageEvent = $event">
+<mat-paginator
+  [length]="boardgameList.boardgames.length"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="pageSizeOptions"
+  (page)="onPageChanged($event)"
+>
 </mat-paginator>

@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { BoardgameService } from "../boardgame.service";
-import { Boardgames } from "../model";
+import { BoardgameList } from "../model";
 import { PageEvent } from "@angular/material/paginator";
 
 @Component({
@@ -11,10 +11,18 @@ import { PageEvent } from "@angular/material/paginator";
 })
 export class BoardgamesComponent implements OnInit {
   category = "";
-  boardgames: Boardgames = { boardgames: [] };
-  length: number;
-  pageSize: number;
-  pageSizeOptions: number[] = [10, 20, 40];
+  searchQuery = "";
+  boardgameList: BoardgameList = { boardgames: [] };
+
+  // MatPaginator Input
+  length = this.boardgameList.boardgames.length;
+  pageIndex: number = 0;
+  pageSize: number = 10;
+  pageSizeOptions: number[] = [10, 20, 50, 100];
+    
+  // MatPaginator Output
+  pageEvent: PageEvent;
+  activeBoardgamePage = [];
 
   constructor(
     readonly activatedRoute: ActivatedRoute,
@@ -23,43 +31,55 @@ export class BoardgamesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.boardgameSvc
-      .boardgames(this.activatedRoute.snapshot.queryParamMap.get("name"))
+    this.category = this.activatedRoute.snapshot.params.category;
+    if (this.category != null) {
+      console.info(">>> category: ", this.category);
+      this.boardgameSvc
+        .category(this.category)
+        .then(result => {
+          this.boardgameList = result;
+          this.activeBoardgamePage = this.boardgameList.boardgames.slice(0,
+            this.pageSize
+          );
+        })
+        .catch(error => {
+          console.error(">> error: ", error);
+        });
+    } 
+
+    this.searchQuery = this.activatedRoute.snapshot.queryParamMap.get("name")
+    if (this.searchQuery != null) {
+      console.log(">> input: ", this.searchQuery);
+      this.boardgameSvc
+      .boardgames(this.searchQuery)
       .then(result => {
-        console.log(
-          ">> query: ",
-          this.activatedRoute.snapshot.paramMap.get("name")
+        this.boardgameList = result;
+        this.activeBoardgamePage = this.boardgameList.boardgames.slice(0,
+          this.pageSize
         );
-        this.boardgames = result;
-        this.length = this.boardgames.boardgames.length;
-        this.pageSize = this.length;
       })
       .catch(error => {
         console.error(">> error: ", error);
       });
-
-    /*this.category = this.activatedRoute.snapshot.params.category;
-    console.info(">>> category: ", this.category);
-    this.boardgameSvc
-      .category(this.category)
-      .then(result => {
-        this.boardgames = result;
-        this.length = this.boardgames.boardgames.length;
-        this.pageSize = this.length;
-      })
-      .catch(error => {
-        console.error(">> error: ", error);
-      });*/
+    }
   }
 
   selected(text) {
     console.info("selected boardgame: ", text);
-    this.router.navigate(["/boardgames", text]);
+    this.router.navigate(["/boardgame/", text]);
   }
-
-  pageEvent: PageEvent;
 
   setPageSizeOptions(setPageSizeOptionsInput: string) {
     this.pageSizeOptions = setPageSizeOptionsInput.split(",").map(str => +str);
+  }
+
+  onPageChanged(e) {
+    let firstCut = e.pageIndex * e.pageSize;
+    let secondCut = firstCut + e.pageSize;
+    this.activeBoardgamePage = this.boardgameList.boardgames.slice(
+      firstCut,
+      secondCut
+    );
+    window.scrollTo(0, 0);
   }
 }

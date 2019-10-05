@@ -1,10 +1,9 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
-import { map, flatMap, toArray } from "rxjs/operators";
 
 import {
-  Boardgames,
-  Categories,
+  BoardgameList,
+  CategoryList,
   Boardgame,
   BoardgameDetail,
   CommentList,
@@ -16,35 +15,35 @@ import {
 export class BoardgameService {
   constructor(readonly http: HttpClient) {}
 
-  boardgames(name: string): Promise<Boardgames> {
+  boardgames(name: string): Promise<BoardgameList> {
     const params = new HttpParams().set("name", name);
     return this.http
       .get<Boardgame[]>("/api/boardgames", { params: params })
       .toPromise()
       .then(result => {
-        return <Boardgames>{
+        return <BoardgameList>{
           boardgames: result
         };
       });
   }
 
-  category(category: string): Promise<Boardgames> {
+  category(category: string): Promise<BoardgameList> {
     return this.http
       .get<Boardgame[]>(`/api/boardgames/${category}`)
       .toPromise()
       .then(result => {
-        return <Boardgames>{
+        return <BoardgameList>{
           boardgames: result
         };
       });
   }
 
-  categories(): Promise<Categories> {
+  categories(): Promise<CategoryList> {
     return this.http
       .get<string[]>("/api/categories")
       .toPromise()
       .then(result => {
-        return <Categories>{
+        return <CategoryList>{
           categories: result
         };
       });

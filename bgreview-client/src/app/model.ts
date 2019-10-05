@@ -4,11 +4,11 @@ export interface Boardgame {
   Name: string;
 }
 
-export interface Boardgames {
+export interface BoardgameList {
   boardgames: Boardgame[];
 }
 
-export interface Categories {
+export interface CategoryList {
   categories: string[];
 }
 

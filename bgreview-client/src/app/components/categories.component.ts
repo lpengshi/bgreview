@@ -1,7 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { BoardgameService } from "../boardgame.service";
-import { Categories } from "../model";
+import { CategoryList } from "../model";
 import { Router } from "@angular/router";
+import { PageEvent } from "@angular/material/paginator";
 
 @Component({
   selector: "app-categories",
@@ -9,8 +10,18 @@ import { Router } from "@angular/router";
   styleUrls: ["./categories.component.css"]
 })
 export class CategoriesComponent implements OnInit {
-  categories: Categories = { categories: [] };
+  categoryList: CategoryList = { categories: [] };
   searchInput: string;
+
+  // MatPaginator Input
+  length = this.categoryList.categories.length;
+  pageIndex: number = 0;
+  pageSize: number = 10;
+  pageSizeOptions: number[] = [10, 20, 50, 100];
+    
+  // MatPaginator Output
+  pageEvent: PageEvent;
+  activeCategoryPage = [];
 
   constructor(
     readonly boardgameSvc: BoardgameService,
@@ -21,7 +32,11 @@ export class CategoriesComponent implements OnInit {
     this.boardgameSvc
       .categories()
       .then(result => {
-        this.categories = result;
+        this.categoryList = result;
+        this.categoryList.categories.splice(0,1);
+        this.activeCategoryPage = this.categoryList.categories.slice(0,
+          this.pageSize
+        );
       })
       .catch(error => {
         console.error(">> error: ", error);
@@ -33,6 +48,19 @@ export class CategoriesComponent implements OnInit {
     this.router.navigate(["/boardgames", text]);
   }
 
+  setPageSizeOptions(setPageSizeOptionsInput: string) {
+    this.pageSizeOptions = setPageSizeOptionsInput.split(",").map(str => +str);
+  }
+
+  onPageChanged(e) {
+    let firstCut = e.pageIndex * e.pageSize;
+    let secondCut = firstCut + e.pageSize;
+    this.activeCategoryPage = this.categoryList.categories.slice(
+      firstCut,
+      secondCut
+    );
+    window.scrollTo(0, 0);
+  }
   onSubmit() {
     if (this.searchInput == undefined) {
       this.searchInput = "";

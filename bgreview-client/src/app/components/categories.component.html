@@ -15,9 +15,17 @@
   <h1 mat-subheader>Boardgame Categories</h1>
   <button
     mat-list-item
-    *ngFor="let c of categories.categories"
+    *ngFor="let c of activeCategoryPage"
     (click)="selected(c._id.category)"
   >
     {{ c._id.category }}
   </button>
 </mat-action-list>
+
+<mat-paginator
+  [length]="categoryList.categories.length"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="pageSizeOptions"
+  (page)="onPageChanged($event)"
+>
+</mat-paginator>

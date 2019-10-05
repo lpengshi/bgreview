@@ -1,6 +1,6 @@
 export interface Boardgame {
   _id: string;
-  ID: string;
+  ID: number;
   Name: string;
 }
 
@@ -31,7 +31,7 @@ export class PostComment {
     public comment: string,
     public rating: number,
     public name: string
-  ) { }
+  ) {}
 }
 
 export interface BoardgameDetail {

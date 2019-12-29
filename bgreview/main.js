@@ -26,8 +26,6 @@ const app = express();
 app.get('/api/boardgames',
     (req, resp) => {
         const name = req.query.name || "";
-        const offset = parseInt(req.query.offset) || 0;
-        const limit = parseInt(req.query.limit) || 20;
 
         client.db('bgreview')
             .collection('boardgames')
@@ -36,8 +34,6 @@ app.get('/api/boardgames',
                 { $project: { ID: 1, Name: { $trim: { input: "$Name", chars: "\"'" } } } }, //remove the quotations if any
             ])
             .sort({ Name: 1 })
-            .skip(offset)
-            .limit(limit)
             .toArray() //
             .then(result => {
                 resp.status(200)
@@ -95,7 +91,7 @@ app.get('/api/boardgames/:category',
                 { $replaceRoot: { newRoot: { $mergeObjects: [{ $arrayElemAt: ["$game", 0] }, "$$ROOT"] } } },
                 { $project: { game: 0 } },
             ])
-            .project({ Name: 1 })
+            .project({ ID: 1, Name: 1 })
             .toArray() //
             .then(result => {
                 resp.status(200)

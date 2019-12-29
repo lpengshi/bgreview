@@ -79,7 +79,7 @@ export class BoardgameService {
       });
   }
 
-  boardgameDetail(gameId: string): Promise<BoardgameDetail> {
+  boardgameDetail(gameId): Promise<BoardgameDetail> {
     return this.http
       .get<BoardgameDetail>(`/api/boardgame/${gameId}`)
       .toPromise()

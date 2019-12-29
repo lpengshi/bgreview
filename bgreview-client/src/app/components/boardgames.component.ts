@@ -19,7 +19,7 @@ export class BoardgamesComponent implements OnInit {
   pageIndex: number = 0;
   pageSize: number = 10;
   pageSizeOptions: number[] = [10, 20, 50, 100];
-    
+
   // MatPaginator Output
   pageEvent: PageEvent;
   activeBoardgamePage = [];
@@ -38,29 +38,31 @@ export class BoardgamesComponent implements OnInit {
         .category(this.category)
         .then(result => {
           this.boardgameList = result;
-          this.activeBoardgamePage = this.boardgameList.boardgames.slice(0,
+          this.activeBoardgamePage = this.boardgameList.boardgames.slice(
+            0,
             this.pageSize
           );
         })
         .catch(error => {
           console.error(">> error: ", error);
         });
-    } 
+    }
 
-    this.searchQuery = this.activatedRoute.snapshot.queryParamMap.get("name")
+    this.searchQuery = this.activatedRoute.snapshot.queryParamMap.get("name");
     if (this.searchQuery != null) {
       console.log(">> input: ", this.searchQuery);
       this.boardgameSvc
-      .boardgames(this.searchQuery)
-      .then(result => {
-        this.boardgameList = result;
-        this.activeBoardgamePage = this.boardgameList.boardgames.slice(0,
-          this.pageSize
-        );
-      })
-      .catch(error => {
-        console.error(">> error: ", error);
-      });
+        .boardgames(this.searchQuery)
+        .then(result => {
+          this.boardgameList = result;
+          this.activeBoardgamePage = this.boardgameList.boardgames.slice(
+            0,
+            this.pageSize
+          );
+        })
+        .catch(error => {
+          console.error(">> error: ", error);
+        });
     }
   }
 

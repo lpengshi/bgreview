@@ -1,6 +1,9 @@
 <mat-action-list>
-  <button mat-list-item *ngFor="let bg of activeBoardgamePage"
-    (click)="selected(bg._id)">
+  <button
+    mat-list-item
+    *ngFor="let bg of activeBoardgamePage"
+    (click)="selected(bg.ID)"
+  >
     {{ bg.Name }}
   </button>
 </mat-action-list>

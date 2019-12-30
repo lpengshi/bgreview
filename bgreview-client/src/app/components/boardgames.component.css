@@ -1,7 +1,11 @@
 form {
-    margin: 1rem;
-} 
+  margin: 1rem;
+}
 
 .mat-form-field {
-    width: 100%;
+  width: 100%;
+}
+
+.spinner {
+  margin: 10px auto;
 }

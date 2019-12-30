@@ -13,6 +13,7 @@ export class BoardgamesComponent implements OnInit {
   category = "";
   searchQuery = "";
   boardgameList: BoardgameList = { boardgames: [] };
+  loading = true;
 
   // MatPaginator Input
   length = this.boardgameList.boardgames.length;
@@ -37,6 +38,7 @@ export class BoardgamesComponent implements OnInit {
       this.boardgameSvc
         .category(this.category)
         .then(result => {
+          this.loading = false;
           this.boardgameList = result;
           this.activeBoardgamePage = this.boardgameList.boardgames.slice(
             0,
@@ -54,6 +56,7 @@ export class BoardgamesComponent implements OnInit {
       this.boardgameSvc
         .boardgames(this.searchQuery)
         .then(result => {
+          this.loading = false;
           this.boardgameList = result;
           this.activeBoardgamePage = this.boardgameList.boardgames.slice(
             0,

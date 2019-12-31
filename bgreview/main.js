@@ -42,7 +42,7 @@ app.get('/api/boardgames',
                             { $match: { Name: { $regex: `.*${name}.*`, $options: 'i' } } },  //find games with matching name
                             { $count: "count" }
                         ],
-                        "results": [
+                        "result": [
                             { $match: { Name: { $regex: `.*${name}.*`, $options: 'i' } } },  //find games with matching name
                             { $project: { ID: 1, Name: { $trim: { input: "$Name", chars: "\"'" } } } }, //remove the quotations if any
                             { $sort: { Name: 1 } },

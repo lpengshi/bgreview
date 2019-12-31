@@ -61,6 +61,7 @@ export class BoardgamesComponent implements OnInit {
       this.boardgameSvc
         .boardgames({name: this.searchQuery, offset: this.pageIndex, limit: this.pageSize})
         .then(result => {
+          console.info(result);
           this.loading = false;
           this.boardgameList = result;
           this.activeBoardgamePage = this.boardgameList.boardgames;

@@ -1,7 +1,6 @@
-<h1 mat-subheader *ngIf="category != null">Boardgame Category: {{ category }}</h1>
-<h1 mat-subheader *ngIf="searchQuery != null">Searching For: {{ searchQuery }}</h1>
-<mat-spinner class="spinner" [diameter]="35" *ngIf="loading"></mat-spinner>
 <mat-action-list>
+  <h1 mat-subheader *ngIf="category != null">Boardgame Category: {{ category }}</h1>
+  <h1 mat-subheader *ngIf="searchQuery != null">Searching For: {{ searchQuery }}</h1>
   <button
     mat-list-item
     *ngFor="let bg of activeBoardgamePage"
@@ -10,6 +9,7 @@
     {{ bg.Name }}
   </button>
 </mat-action-list>
+<mat-spinner class="spinner" [diameter]="35" *ngIf="loading"></mat-spinner>
 
 <mat-paginator #paginator
   [length]="length"

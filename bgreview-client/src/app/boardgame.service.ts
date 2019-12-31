@@ -13,10 +13,12 @@ import {
 
 @Injectable()
 export class BoardgameService {
-  constructor(readonly http: HttpClient) {}
+  constructor(readonly http: HttpClient) { }
 
-  boardgames(name: string): Promise<BoardgameList> {
+  boardgames({name, offset, limit}:{name: string, offset: number, limit: number}): Promise<BoardgameList> {
     const params = new HttpParams().set("name", name);
+    params.append("offset", offset.toString());
+    params.append("limit", limit.toString());
     return this.http
       .get<Boardgame[]>("/api/boardgames", { params: params })
       .toPromise()
@@ -27,13 +29,15 @@ export class BoardgameService {
       });
   }
 
-  category(category: string): Promise<BoardgameList> {
+  category({ category, offset, limit }: { category: string, offset: number, limit: number }): Promise<BoardgameList> {
     return this.http
-      .get<Boardgame[]>(`/api/boardgames/${category}`)
+      .get<BoardgameList>(`/api/boardgames/${category}/${offset}/${limit}`)
       .toPromise()
       .then(result => {
+        console.info("res from api>> ", result);
         return <BoardgameList>{
-          boardgames: result
+          boardgames: result[0]["result"],
+          total_count: result[0]["result_pool_count"]["count"]
         };
       });
   }

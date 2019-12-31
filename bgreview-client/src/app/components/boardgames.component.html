@@ -11,8 +11,8 @@
   </button>
 </mat-action-list>
 
-<mat-paginator
-  [length]="boardgameList.boardgames.length"
+<mat-paginator #paginator
+  [length]="length"
   [pageSize]="pageSize"
   [pageSizeOptions]="pageSizeOptions"
   (page)="onPageChanged($event)"

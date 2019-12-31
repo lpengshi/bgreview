@@ -27,13 +27,33 @@ app.get('/api/boardgames',
     (req, resp) => {
         const name = req.query.name || "";
 
+        const lim = parseInt(req.query.limit);
+        const off = parseInt(req.query.offset);
+
+        const limit = lim || 10;
+        const offset = off * limit || 0;
+        console.info(req.query);
         client.db('bgreview')
             .collection('boardgames')
             .aggregate([
-                { $match: { Name: { $regex: `.*${name}.*`, $options: 'i' } } },  //find games with matching name
-                { $project: { ID: 1, Name: { $trim: { input: "$Name", chars: "\"'" } } } }, //remove the quotations if any
+                {
+                    $facet: {
+                        "result_pool_count": [
+                            { $match: { Name: { $regex: `.*${name}.*`, $options: 'i' } } },  //find games with matching name
+                            { $count: "count" }
+                        ],
+                        "results": [
+                            { $match: { Name: { $regex: `.*${name}.*`, $options: 'i' } } },  //find games with matching name
+                            { $project: { ID: 1, Name: { $trim: { input: "$Name", chars: "\"'" } } } }, //remove the quotations if any
+                            { $sort: { Name: 1 } },
+                            { $skip: offset },
+                            { $limit: limit }
+                        ]
+                    },
+                },
+                { $unwind: "$result_pool_count" },
             ])
-            .sort({ Name: 1 })
+            //.sort({ Name: 1 })
             .toArray() //
             .then(result => {
                 resp.status(200)
@@ -80,27 +100,57 @@ app.get('/api/categories',
 // GET /api/boardgames/:category
 // gets a list of boardgames in a specific category
 // returns name and id
-app.get('/api/boardgames/:category',
+app.get('/api/boardgames/:category/:offset?/:limit?',
     (req, resp) => {
         console.info('>>> category: ', req.params.category)
+        console.info('>>> params: ', req.params)
+
+        const lim = parseInt(req.params.limit);
+        const off = parseInt(req.params.offset);
+
+        const limit = lim && lim > 0 ? lim : 10;
+        const offset = off ? (off * limit) : 0;
+
         client.db('bgreview')
             .collection('gameinfo')
             .aggregate([
-                { $match: { boardgamecategory: { $regex: `.*${req.params.category}.*`, $options: 'i' } } },
-                { $lookup: { from: "boardgames", localField: "id", foreignField: "ID", as: "game" } },
-                { $replaceRoot: { newRoot: { $mergeObjects: [{ $arrayElemAt: ["$game", 0] }, "$$ROOT"] } } },
-                { $project: { game: 0 } },
+                {
+                    $facet: {
+                        "result_pool_count": [
+                            { $match: { boardgamecategory: { $regex: `.*${req.params.category}.*`, $options: 'i' } } },
+                            // { $group: { _id: null, count: { $sum: 1 } } },
+                            // { $project: { _id: 0 } }
+                            { $count: "count" }
+                        ],
+                        "result": [
+                            { $match: { boardgamecategory: { $regex: `.*${req.params.category}.*`, $options: 'i' } } },
+                            {
+                                $lookup: {
+                                    from: "boardgames",
+                                    localField: "id",
+                                    foreignField: "ID",
+                                    as: "game"
+                                }
+                            },
+                            { $replaceRoot: { newRoot: { $mergeObjects: [{ $arrayElemAt: ["$game", 0] }, "$$ROOT"] } } },
+                            { $project: { _id: 1, ID: 1, Name: 1 } },
+                            { $skip: offset },
+                            { $limit: limit }
+                        ]
+                    }
+                },
+                { $unwind: "$result_pool_count" },
             ])
-            .project({ ID: 1, Name: 1 })
             .toArray() //
             .then(result => {
-                resp.status(200)
-                resp.type('application/json')
+                resp.status(200);
+                resp.type('application/json');
                 resp.json(result);
             })
             .catch(error => {
-                resp.status(400)
-                resp.end(error);
+                console.error(error);
+                resp.status(400).send();
+                //resp.end(error);
             })
     }
 )

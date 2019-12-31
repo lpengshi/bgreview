@@ -5,6 +5,7 @@ export interface Boardgame {
 }
 
 export interface BoardgameList {
+  total_count: number;
   boardgames: Boardgame[];
 }
 

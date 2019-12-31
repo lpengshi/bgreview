@@ -1,8 +1,8 @@
 {
   "name": "Boardgame Review",
   "short_name": "BgReview",
-  "theme_color": "#2196f3",
-  "background_color": "#2196f3",
+  "theme_color": "#512DA8",
+  "background_color": "#512DA8",
   "display": "standalone",
   "orientation": "portrait",
   "Scope": "/",

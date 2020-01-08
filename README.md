@@ -12,6 +12,17 @@ The boardgame application will consists of the following features:
 ## Data Source
 https://www.kaggle.com/account/login?returnUrl=%2Fjvanelteren%2Fboardgamegeek-reviews%2Fversion%2F3.
 
+## Setup
+1. Clone or download the repository to desktop
+2. Within the directory (bgreview, bgreview-client), run **npm install** to get all the required dependencies
+3. Install nodemon with **npm install -g nodemon**
+5. Run bgreview with nodemon with **nodemon main.js**
+6. Install Angular CLI with **npm install -g @angular/cli**
+7. Run bgreview-client with **ng serve --proxy-config proxy-config**
+(Alternatively, you can build bgreview-client with **ng build --prod** and transfer the files in the dist folder to bgreview)
+
+Do ensure that you are in the correct directly when running the commands above.
+
 ## Contributors
 * Pengshi Lai
 * Janel Lee

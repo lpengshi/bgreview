@@ -21,7 +21,7 @@ https://www.kaggle.com/account/login?returnUrl=%2Fjvanelteren%2Fboardgamegeek-re
 7. Run bgreview-client with **ng serve --proxy-config proxy-config**
 (Alternatively, you can build bgreview-client with **ng build --prod** and transfer the files in the dist folder to bgreview)
 
-Do ensure that you are in the correct directly when running the commands above.
+Do ensure that you are in the correct directory when running the commands above.
 
 ## Contributors
 * Pengshi Lai

@@ -1,7 +1,7 @@
 FROM node:latest
 
 # building 
-ENV APP_PORT=3000 APP_DIR=/app
+ENV APP_PORT=8080 APP_DIR=/app
 
 WORKDIR ${APP_DIR}
 
@@ -17,4 +17,4 @@ RUN npm install
 # run/execute
 EXPOSE ${APP_PORT}
 
-ENTRYPOINT [ "node", "server.js" ]
+CMD [ "node", "main.js" ]

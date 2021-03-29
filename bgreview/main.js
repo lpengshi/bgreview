@@ -7,7 +7,7 @@ const upload = multer();
 const bodyParser = require('body-parser');
 
 // Configure PORT
-const PORT = parseInt(process.argv[2]) || parseInt(process.env.APP_PORT) || 3000;
+const PORT = parseInt(process.argv[2]) || parseInt(process.env.APP_PORT) || 8080;
 
 // Load configuration 
 const config = require('./config.json');

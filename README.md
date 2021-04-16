@@ -12,6 +12,9 @@ The boardgame application will consists of the following features:
 ## Data Source
 https://www.kaggle.com/account/login?returnUrl=%2Fjvanelteren%2Fboardgamegeek-reviews%2Fversion%2F3.
 
+## Hosted on Google Cloud Platform
+https://tinyurl.com/gcpbgreview
+
 ## Setup
 1. Clone or download the repository to desktop
 2. Within the directory (bgreview, bgreview-client), run **npm install** to get all the required dependencies
